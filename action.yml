@@ -27,11 +27,11 @@ runs:
       working-directory: ${{ inputs.sourceDir }}
       run: |
         go install github.com/jstemmer/go-junit-report@latest
-        go test -v ./... | go-junit-report -set-exit-code > report.xml
+        go test -timeout $TTEST_TIMEOUT -v ./... | go-junit-report -set-exit-code > report.xml
 
     - name: Post Test Summary
-      uses: test-summary/action@v1
+      uses: actions/upload-artifact@v3
       with:
-        paths: |
-          ${{ inputs.sourceDir }}/report.xml
+        name: ttest-result
+        path: ${{ inputs.sourceDir }}/report.xml
       if: always()
